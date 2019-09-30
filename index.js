@@ -15,6 +15,7 @@ const client = ovh({
 
 const app = polka();
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post("/", (req, res) => {
@@ -40,21 +41,23 @@ app.post("/", (req, res) => {
 });
 
 app.post("/block", (req, res) => {
-  console.log("Blocking", req.params, req.body);
+  const message = req.body.text || "";
+  console.log("Blocking", req.params, req.body, message);
 
   res.end(
     JSON.stringify({
-      id: "yolo"
+      text: `YO! ${message} bloqué.`
     })
   );
 });
 
 app.post("/unblock", (req, res) => {
-  console.log("Unblocking", req.params, req.body);
+  const message = req.body.text || "";
+  console.log("Unblocking", req.params, req.body, message);
 
   res.end(
     JSON.stringify({
-      id: "yolo"
+      text: `YO! ${message} débloqué.`
     })
   );
 });
