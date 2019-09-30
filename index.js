@@ -36,7 +36,15 @@ app.post("/", (req, res) => {
         )
       )
     )
-    .then(result => res.end(JSON.stringify(result)))
+    .then(result => {
+      const message =
+        "Les numéros actuellement bloqués sont :\n\n" +
+        result
+          .map(number => `* ${number.callNumber} (id : \`${number.id}\`)`)
+          .join("\n");
+
+      res.end(message);
+    })
     .catch(e => console.error(e));
 });
 
@@ -44,22 +52,14 @@ app.post("/block", (req, res) => {
   const message = req.body.text || "";
   console.log("Blocking", req.params, req.body, message);
 
-  res.end(
-    JSON.stringify({
-      text: `YO! ${message} bloqué.`
-    })
-  );
+  res.end(`YO! ${message} bloqué.`);
 });
 
 app.post("/unblock", (req, res) => {
   const message = req.body.text || "";
   console.log("Unblocking", req.params, req.body, message);
 
-  res.end(
-    JSON.stringify({
-      text: `YO! ${message} débloqué.`
-    })
-  );
+  res.end(`YO! ${message} débloqué.`);
 });
 
 app.get("/", (_, res) => {
