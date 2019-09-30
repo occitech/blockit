@@ -1,5 +1,6 @@
 const ovh = require("ovh");
 const polka = require("polka");
+const bodyParser = require("body-parser");
 
 require("dotenv").config();
 
@@ -14,8 +15,10 @@ const client = ovh({
 
 const app = polka();
 
+app.use(bodyParser.json());
+
 app.post("/", (req, res) => {
-  console.log("Listing", req.params);
+  console.log("Listing", req.params, req.body);
 
   client
     .requestPromised(
@@ -37,7 +40,7 @@ app.post("/", (req, res) => {
 });
 
 app.post("/block", (req, res) => {
-  console.log("Blocking", req.params);
+  console.log("Blocking", req.params, req.body);
 
   res.end(
     JSON.stringify({
@@ -47,7 +50,7 @@ app.post("/block", (req, res) => {
 });
 
 app.post("/unblock", (req, res) => {
-  console.log("Unblocking", req.params);
+  console.log("Unblocking", req.params, req.body);
 
   res.end(
     JSON.stringify({
