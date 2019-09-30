@@ -51,15 +51,45 @@ app.post("/", (req, res) => {
 app.post("/block", (req, res) => {
   const message = req.body.text || "";
   console.log("Blocking", req.params, req.body, message);
+  if (!message.startsWith("+")) {
+    res.end(
+      `NOPE! Le numéro "${message}" n'est pas au format international (ex : +33102030405).`
+    );
+    return;
+  }
 
-  res.end(`YO! ${message} bloqué.`);
+  const payload = {
+    nature: "international",
+    type: "incomingBlackList",
+    callNumber: message
+  };
+  client
+    .requestPromised(
+      "POST",
+      `/telephony/${billingAccount}/screen/${serviceName}/screenLists`,
+      payload
+    )
+    .then(() => res.end(`YO! ${message} bloqué.`))
+    .catch(e => {
+      console.log("ERREUR", e);
+      res.end(`OOPS! Une erreur est survenue.`);
+    });
 });
 
 app.post("/unblock", (req, res) => {
-  const message = req.body.text || "";
-  console.log("Unblocking", req.params, req.body, message);
+  const id = req.body.text || "";
+  console.log("Unblocking", req.params, req.body, id);
 
-  res.end(`YO! ${message} débloqué.`);
+  client
+    .requestPromised(
+      "DELETE",
+      `/telephony/${billingAccount}/screen/${serviceName}/screenLists/${id}`
+    )
+    .then(() => res.end(`YO! ${id} débloqué.`))
+    .catch(e => {
+      console.log("ERREUR", e);
+      res.end(`OOPS! Une erreur est survenue.`);
+    });
 });
 
 app.get("/", (_, res) => {
