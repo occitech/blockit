@@ -56,6 +56,10 @@ app.post("/unblock", (req, res) => {
   );
 });
 
+app.get("/", (_, res) => {
+  res.end("Hello world!");
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, err => {
   if (err) throw err;
