@@ -40,7 +40,12 @@ app.post("/", (req, res) => {
       const message =
         "Les numéros actuellement bloqués sont :\n\n" +
         result
-          .map(number => `* ${number.callNumber} (id : \`${number.id}\`)`)
+          .map(
+            number =>
+              `* ${
+                number.callNumber
+              } *${number.status.toUpperCase()}* (id : \`${number.id}\`)`
+          )
           .join("\n");
 
       res.end(message);
